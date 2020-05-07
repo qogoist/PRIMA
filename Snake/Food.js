@@ -7,7 +7,8 @@ var Snake;
             ƒ.Debug.log("Creating new Food...");
             super(_name);
             this.createComponents();
-            this.randomizeLocation();
+            this.radius = 0.5;
+            this.position = this.mtxLocal;
         }
         randomizeLocation() {
             let rnd = new ƒ.Random();
@@ -20,7 +21,7 @@ var Snake;
             pos2D.x = Math.floor(pos2D.x);
             pos2D.y = Math.floor(pos2D.y);
             let position = pos2D.toVector3();
-            ƒ.Debug.log(position.toString());
+            ƒ.Debug.log("Food at: " + position.toString());
             this.mtxLocal.translation = position;
         }
         setLocation(_position) {

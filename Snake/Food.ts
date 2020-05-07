@@ -1,13 +1,17 @@
 namespace Snake {
     import ƒ = FudgeCore;
 
-    export class Food extends ƒ.Node {
+    export class Food extends ƒ.Node implements CollisionSphere {
+
+        public radius: number;
+        public position: ƒ.Matrix4x4;
 
         constructor(_name: string) {
             ƒ.Debug.log("Creating new Food...");
             super(_name);
             this.createComponents();
-            this.randomizeLocation();
+            this.radius = 0.5;
+            this.position = this.mtxLocal;
         }
 
         public randomizeLocation(): void {
@@ -26,7 +30,7 @@ namespace Snake {
 
             let position: ƒ.Vector3 = pos2D.toVector3();
 
-            ƒ.Debug.log(position.toString());
+            ƒ.Debug.log("Food at: " + position.toString());
 
             this.mtxLocal.translation = position;
         }

@@ -6,6 +6,7 @@ namespace Snake {
     let snake: Snake;
     let food: Food;
     let game: ƒ.Node;
+    let head: SnakeSegment;
 
     window.addEventListener("load", hndLoad);
 
@@ -27,6 +28,7 @@ namespace Snake {
 
         snake = new Snake("Snake", 4);
         food = new Food("Food");
+        head = <SnakeSegment>snake.getChildren()[0];
 
         viewport.draw();
 
@@ -35,26 +37,26 @@ namespace Snake {
 
         food.randomizeLocation();
 
-        document.addEventListener("keydown", hndKey);
+        document.addEventListener("keydown", control);
 
         ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
-        ƒ.Loop.start(ƒ.LOOP_MODE.TIME_GAME, 1, false);
+        ƒ.Loop.start(ƒ.LOOP_MODE.TIME_GAME, 2, false);
     }
 
     function update(_event: Event): void {
         snake.move();
 
-        let distanceToFood: number = ƒ.Vector3.DIFFERENCE(snake.getChildren()[0].mtxLocal.translation, food.mtxLocal.translation).magnitude;
-        let allowedDistance: number = 1;
-
-        if (distanceToFood < allowedDistance)
-            snake.grow();
-
+        checkCollision();
 
         viewport.draw();
     }
 
-    function hndKey(_event: Event): void {
+    function checkCollision(): void {
+        if (head.collidesWith(food))
+            snake.grow();
+    }
+
+    function control(_event: Event): void {
         if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.ARROW_LEFT]))
             snake.direction = ƒ.Vector3.X(-1);
         if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.ARROW_RIGHT]))

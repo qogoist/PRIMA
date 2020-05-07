@@ -6,9 +6,9 @@ var Snake;
         constructor(_name, _segments) {
             ƒ.Debug.log("Creating new Snake...");
             super(_name);
-            this.dirCurrent = ƒ.Vector3.X();
             this.segments = 0;
             this.createSegments(_segments);
+            this.dirCurrent = ƒ.Vector3.X();
         }
         set direction(_next) {
             if (this.dirCurrent.equals(ƒ.Vector3.SCALE(_next, -1)))
@@ -28,23 +28,15 @@ var Snake;
             }
         }
         grow() {
-            let segment = new ƒ.Node("Segment");
-            let mesh = new ƒ.MeshQuad();
-            let mtrSolidWhite = new ƒ.Material("SolidWhite", ƒ.ShaderUniColor, new ƒ.CoatColored(ƒ.Color.CSS("WHITE")));
-            let cmpMesh = new ƒ.ComponentMesh(mesh);
-            cmpMesh.pivot.scale(ƒ.Vector3.ONE(0.8));
-            segment.addComponent(cmpMesh);
-            let cmpMaterial = new ƒ.ComponentMaterial(mtrSolidWhite);
-            segment.addComponent(cmpMaterial);
+            let segment = new Snake_1.SnakeSegment("Segment");
             let translation;
             if (this.segments == 0)
                 translation = ƒ.Vector3.ZERO();
-            else {
+            else
                 translation = this.getChildren()[this.segments - 1].mtxLocal.translation;
-                translation.add(ƒ.Vector3.SCALE(this.dirCurrent, -1));
-            }
-            let cmpTransform = new ƒ.ComponentTransform(ƒ.Matrix4x4.TRANSLATION(translation));
-            segment.addComponent(cmpTransform);
+            if (this.dirCurrent == null)
+                translation.add(new ƒ.Vector3(-1, 0, 0));
+            segment.mtxLocal.translation = translation;
             this.addChild(segment);
             this.segments++;
         }

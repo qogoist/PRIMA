@@ -5,6 +5,7 @@ var Snake;
     let snake;
     let food;
     let game;
+    let head;
     window.addEventListener("load", hndLoad);
     function hndLoad(_event) {
         const canvas = document.querySelector("canvas");
@@ -19,23 +20,25 @@ var Snake;
         ƒ.Debug.log(Snake.viewport);
         snake = new Snake.Snake("Snake", 4);
         food = new Snake.Food("Food");
+        head = snake.getChildren()[0];
         Snake.viewport.draw();
         game.addChild(snake);
         game.addChild(food);
         food.randomizeLocation();
-        document.addEventListener("keydown", hndKey);
+        document.addEventListener("keydown", control);
         ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
-        ƒ.Loop.start(ƒ.LOOP_MODE.TIME_GAME, 1, false);
+        ƒ.Loop.start(ƒ.LOOP_MODE.TIME_GAME, 2, false);
     }
     function update(_event) {
         snake.move();
-        let distanceToFood = ƒ.Vector3.DIFFERENCE(snake.getChildren()[0].mtxLocal.translation, food.mtxLocal.translation).magnitude;
-        let allowedDistance = 1;
-        if (distanceToFood < allowedDistance)
-            snake.grow();
+        checkCollision();
         Snake.viewport.draw();
     }
-    function hndKey(_event) {
+    function checkCollision() {
+        if (head.collidesWith(food))
+            snake.grow();
+    }
+    function control(_event) {
         if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.ARROW_LEFT]))
             snake.direction = ƒ.Vector3.X(-1);
         if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.ARROW_RIGHT]))
