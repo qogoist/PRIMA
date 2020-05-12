@@ -18,8 +18,9 @@ var Snake3D;
         }
         move() {
             this.dirCurrent = this.dirNext || this.dirCurrent;
-            let cmpPrev = this.head.getComponent(ƒ.ComponentTransform);
-            let mtxNext = cmpPrev.local.copy;
+            let child = this.head;
+            let cmpPrev = child.getComponent(ƒ.ComponentTransform);
+            let mtxNext = child.mtxLocal.copy;
             mtxNext.translate(this.dirCurrent);
             let cmpNext = new ƒ.ComponentTransform(mtxNext);
             for (let segment of this.getChildren()) {
@@ -29,6 +30,17 @@ var Snake3D;
                 cmpNext = cmpPrev;
             }
         }
+        // public move(): void {
+        //     this.dirCurrent = this.dirNext || this.dirCurrent;
+        //     let nodes: ƒ.Node[] = this.getChildren();
+        //     let nextTrans: ƒ.Vector3 = ƒ.Vector3.SUM(nodes[0].mtxLocal.translation, this.dirCurrent);
+        //     let tempTrans: ƒ.Vector3 = nodes[0].mtxLocal.translation;
+        //     for (let node of nodes) {
+        //         tempTrans = node.mtxLocal.translation;
+        //         node.mtxLocal.translation = nextTrans;
+        //         nextTrans = tempTrans;
+        //     } 
+        // }
         grow() {
             let segment = new Snake3D.SnakeSegment("Segment");
             let translation;

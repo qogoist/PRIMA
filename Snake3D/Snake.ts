@@ -12,6 +12,7 @@ namespace Snake3D {
         constructor(_name: string, _segments: number) {
             ƒ.Debug.log("Creating new Snake...");
             super(_name);
+
             this.segments = 0;
             this.createSegments(_segments);
             this.dirCurrent = ƒ.Vector3.X();
@@ -26,10 +27,10 @@ namespace Snake3D {
 
         public move(): void {
             this.dirCurrent = this.dirNext || this.dirCurrent;
+            let child: ƒ.Node = this.head;
+            let cmpPrev: ƒ.ComponentTransform = child.getComponent(ƒ.ComponentTransform);
 
-            let cmpPrev: ƒ.ComponentTransform = this.head.getComponent(ƒ.ComponentTransform);
-
-            let mtxNext: ƒ.Matrix4x4 = cmpPrev.local.copy;
+            let mtxNext: ƒ.Matrix4x4 = child.mtxLocal.copy;
             mtxNext.translate(this.dirCurrent);
 
             let cmpNext: ƒ.ComponentTransform = new ƒ.ComponentTransform(mtxNext);
@@ -41,6 +42,21 @@ namespace Snake3D {
                 cmpNext = cmpPrev;
             }
         }
+
+        // public move(): void {
+        //     this.dirCurrent = this.dirNext || this.dirCurrent;
+
+        //     let nodes: ƒ.Node[] = this.getChildren();
+
+        //     let nextTrans: ƒ.Vector3 = ƒ.Vector3.SUM(nodes[0].mtxLocal.translation, this.dirCurrent);
+        //     let tempTrans: ƒ.Vector3 = nodes[0].mtxLocal.translation;
+
+        //     for (let node of nodes) {
+        //         tempTrans = node.mtxLocal.translation;
+        //         node.mtxLocal.translation = nextTrans;
+        //         nextTrans = tempTrans;
+        //     } 
+        // }
 
         public grow(): void {
             let segment: SnakeSegment = new SnakeSegment("Segment");
