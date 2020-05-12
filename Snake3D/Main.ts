@@ -6,7 +6,6 @@ namespace Snake3D {
     let snake: Snake;
     let food: Food;
     let game: ƒ.Node;
-    let head: SnakeSegment;
 
     window.addEventListener("load", hndLoad);
 
@@ -28,7 +27,6 @@ namespace Snake3D {
 
         snake = new Snake("Snake", 4);
         food = new Food("Food");
-        head = <SnakeSegment>snake.getChildren()[0];
 
         viewport.draw();
 
@@ -52,18 +50,14 @@ namespace Snake3D {
     }
 
     // function checkCollision(): void {
-    //     if (head.collidesWith(food))
+    //     if (snake.head.collidesWith(food))
     //         snake.grow();
     // }
 
     function control(_event: Event): void {
         if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.ARROW_LEFT]))
-            snake.direction = ƒ.Vector3.X(-1);
+            snake.rotate(ƒ.Vector3.Y(90));
         if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.ARROW_RIGHT]))
-            snake.direction = ƒ.Vector3.X(1);
-        if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.ARROW_UP]))
-            snake.direction = ƒ.Vector3.Y(1);
-        if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.ARROW_DOWN]))
-            snake.direction = ƒ.Vector3.Y(-1);
+            snake.rotate(ƒ.Vector3.Y(-90));
     }
 }

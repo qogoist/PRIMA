@@ -5,7 +5,6 @@ var Snake3D;
     let snake;
     let food;
     let game;
-    let head;
     window.addEventListener("load", hndLoad);
     function hndLoad(_event) {
         const canvas = document.querySelector("canvas");
@@ -20,7 +19,6 @@ var Snake3D;
         ƒ.Debug.log(Snake3D.viewport);
         snake = new Snake3D.Snake("Snake", 4);
         food = new Snake3D.Food("Food");
-        head = snake.getChildren()[0];
         Snake3D.viewport.draw();
         game.addChild(snake);
         // game.addChild(food);
@@ -35,18 +33,14 @@ var Snake3D;
         Snake3D.viewport.draw();
     }
     // function checkCollision(): void {
-    //     if (head.collidesWith(food))
+    //     if (snake.head.collidesWith(food))
     //         snake.grow();
     // }
     function control(_event) {
         if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.ARROW_LEFT]))
-            snake.direction = ƒ.Vector3.X(-1);
+            snake.rotate(ƒ.Vector3.Y(90));
         if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.ARROW_RIGHT]))
-            snake.direction = ƒ.Vector3.X(1);
-        if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.ARROW_UP]))
-            snake.direction = ƒ.Vector3.Y(1);
-        if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.ARROW_DOWN]))
-            snake.direction = ƒ.Vector3.Y(-1);
+            snake.rotate(ƒ.Vector3.Y(-90));
     }
 })(Snake3D || (Snake3D = {}));
 //# sourceMappingURL=Main.js.map
