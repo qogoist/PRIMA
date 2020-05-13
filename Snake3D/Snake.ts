@@ -58,7 +58,7 @@ namespace Snake3D {
             let segment: SnakeSegment = new SnakeSegment("Segment");
 
             if (_initialCreation) {
-                segment.mtxLocal.translateZ(this.wrap - 2);
+                segment.mtxLocal.translateZ(this.wrap - 1);
             }
 
             this.addChild(segment);

@@ -40,7 +40,7 @@ var Snake3D;
         grow(_initialCreation = false) {
             let segment = new Snake3D.SnakeSegment("Segment");
             if (_initialCreation) {
-                segment.mtxLocal.translateZ(this.wrap - 2);
+                segment.mtxLocal.translateZ(this.wrap - 1);
             }
             this.addChild(segment);
             this.segments++;
