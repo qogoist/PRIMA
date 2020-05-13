@@ -3,10 +3,11 @@ var Snake3D;
 (function (Snake3D) {
     var ƒ = FudgeCore;
     class Snake extends ƒ.Node {
-        constructor(_name, _segments) {
+        constructor(_name, _segments, _cubeSize) {
             ƒ.Debug.log("Creating new Snake...");
             super(_name);
             this.segments = 0;
+            this.wrap = _cubeSize / 2 + 2;
             this.createSegments(_segments);
             this.dirCurrent = ƒ.Vector3.X();
         }
@@ -20,8 +21,14 @@ var Snake3D;
             this.dirCurrent = this.dirNext || this.dirCurrent;
             let child = this.head;
             let cmpPrev = child.getComponent(ƒ.ComponentTransform);
-            let mtxNext = child.mtxLocal.copy;
-            mtxNext.translate(this.dirCurrent);
+            let mtxNext;
+            while (true) {
+                mtxNext = cmpPrev.local.copy;
+                mtxNext.translate(this.dirCurrent);
+                if (Math.abs(mtxNext.translation.x) < this.wrap && Math.abs(mtxNext.translation.y) < this.wrap && Math.abs(mtxNext.translation.z) < this.wrap)
+                    break;
+                this.rotate(ƒ.Vector3.Y(90));
+            }
             let cmpNext = new ƒ.ComponentTransform(mtxNext);
             for (let segment of this.getChildren()) {
                 cmpPrev = segment.getComponent(ƒ.ComponentTransform);
@@ -30,36 +37,21 @@ var Snake3D;
                 cmpNext = cmpPrev;
             }
         }
-        // public move(): void {
-        //     this.dirCurrent = this.dirNext || this.dirCurrent;
-        //     let nodes: ƒ.Node[] = this.getChildren();
-        //     let nextTrans: ƒ.Vector3 = ƒ.Vector3.SUM(nodes[0].mtxLocal.translation, this.dirCurrent);
-        //     let tempTrans: ƒ.Vector3 = nodes[0].mtxLocal.translation;
-        //     for (let node of nodes) {
-        //         tempTrans = node.mtxLocal.translation;
-        //         node.mtxLocal.translation = nextTrans;
-        //         nextTrans = tempTrans;
-        //     } 
-        // }
-        grow() {
+        grow(_initialCreation = false) {
             let segment = new Snake3D.SnakeSegment("Segment");
-            let translation;
-            if (this.segments == 0)
-                translation = ƒ.Vector3.ZERO();
-            else
-                translation = this.getChildren()[this.segments - 1].mtxLocal.translation;
-            if (this.dirCurrent == null)
-                translation.add(new ƒ.Vector3(-1, 0, 0));
-            segment.mtxLocal.translation = translation;
+            if (_initialCreation) {
+                segment.mtxLocal.translateZ(this.wrap - 2);
+            }
             this.addChild(segment);
             this.segments++;
         }
         rotate(_rotation) {
+            ƒ.Debug.log("Rotating");
             this.head.mtxLocal.rotate(_rotation);
         }
         createSegments(_segments) {
             for (let i = 0; i < _segments; i++) {
-                this.grow();
+                this.grow(true);
             }
             this.addComponent(new ƒ.ComponentTransform(ƒ.Matrix4x4.IDENTITY()));
             this.head = this.getChildren()[0];

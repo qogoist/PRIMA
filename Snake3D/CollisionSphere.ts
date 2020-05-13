@@ -1,8 +1,9 @@
 namespace Snake3D {
     import ƒ = FudgeCore;
 
-    export interface CollisionSphere {
+    export interface CollisionSphere extends ƒ.Node {
         radius: number;
-        position: ƒ.Matrix4x4;
+
+        collidesWith(_target: CollisionSphere): boolean;
     }
 }

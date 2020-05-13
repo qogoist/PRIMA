@@ -8,10 +8,9 @@ var Snake3D;
             super(_name);
             this.createComponents();
             this.radius = 0.5;
-            this.position = this.mtxLocal;
         }
         collidesWith(_target) {
-            let distance = ƒ.Vector3.DIFFERENCE(this.position.translation, _target.position.translation).magnitude;
+            let distance = ƒ.Vector3.DIFFERENCE(this.mtxLocal.translation, _target.getComponent(ƒ.ComponentTransform).local.translation).magnitude;
             let result = false;
             if (distance < this.radius + _target.radius)
                 result = true;
