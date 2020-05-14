@@ -1,6 +1,7 @@
 namespace Snake3D {
     import ƒ = FudgeCore;
 
+    ƒ.RenderManager.initialize(true, true);
     export let viewport: ƒ.Viewport;
 
     let snake: Snake;
@@ -41,7 +42,11 @@ namespace Snake3D {
 
         let posCam: ƒ.Vector3 = ƒ.Vector3.NORMALIZATION(snake.head.mtxLocal.translation, 50);
         viewport.camera.pivot.translation = posCam;
-        viewport.camera.pivot.lookAt(ƒ.Vector3.ZERO(), ƒ.Vector3.Y());
+        let upVec: ƒ.Vector3 = ƒ.Vector3.TRANSFORMATION(ƒ.Vector3.X(), snake.head.mtxWorld, false);
+        upVec.normalize();
+        viewport.camera.pivot.lookAt(ƒ.Vector3.ZERO(), upVec);
+
+        ƒ.Debug.log(upVec.toString());
 
         checkCollision();
 
@@ -85,7 +90,7 @@ namespace Snake3D {
     }
 
     function createGame(_cubeSize: number): ƒ.Node {
-        let node: ƒ.Node = new ƒ.Node("Game");
+        let graph: ƒ.Node = new ƒ.Node("Game");
 
         snake = new Snake("Snake", 4, _cubeSize);
         food = new Food("Food", _cubeSize);
@@ -93,7 +98,7 @@ namespace Snake3D {
         cube = new ƒ.Node("Cube");
 
         let mesh: ƒ.MeshCube = new ƒ.MeshCube();
-        let mtrSolidGray: ƒ.Material = new ƒ.Material("SolidGray", ƒ.ShaderUniColor, new ƒ.CoatColored(ƒ.Color.CSS("GRAY")));
+        let mtrSolidGray: ƒ.Material = new ƒ.Material("SolidGray", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS("GRAY", 1)));
 
         let cmpMesh: ƒ.ComponentMesh = new ƒ.ComponentMesh(mesh);
         // cmpMesh.pivot.scale(ƒ.Vector3.ONE(0.8));
@@ -106,11 +111,28 @@ namespace Snake3D {
         cmpTransform.local.scale(ƒ.Vector3.ONE(_cubeSize));
         cube.addComponent(cmpTransform);
 
-        node.addChild(snake);
-        node.addChild(food);
-        node.addChild(cube);
+        let cmpLightAmbient: ƒ.ComponentLight = new ƒ.ComponentLight(new ƒ.LightAmbient(new ƒ.Color(0.1, 0.1, 0.1)));
+        let cmpLightDirection: ƒ.ComponentLight = new ƒ.ComponentLight(new ƒ.LightDirectional(new ƒ.Color(1, 0, 0)));
+        let cmpLightDirection2: ƒ.ComponentLight = new ƒ.ComponentLight(new ƒ.LightDirectional(new ƒ.Color(0, 0, 1)));
+        let cmpLightDirection3: ƒ.ComponentLight = new ƒ.ComponentLight(new ƒ.LightDirectional(new ƒ.Color(0, 0, 1)));
+        let cmpLightDirection4: ƒ.ComponentLight = new ƒ.ComponentLight(new ƒ.LightDirectional(new ƒ.Color(1, 0, 0)));
+
+        cmpLightDirection.pivot.lookAt(new ƒ.Vector3(0, -10, 10));
+        cmpLightDirection2.pivot.lookAt(new ƒ.Vector3(10, 10, 0));
+        cmpLightDirection3.pivot.lookAt(new ƒ.Vector3(-10, 10, 0));
+        cmpLightDirection4.pivot.lookAt(new ƒ.Vector3(0, -10, -10));
+
+        graph.addComponent(cmpLightAmbient);
+        graph.addComponent(cmpLightDirection);
+        graph.addComponent(cmpLightDirection2);
+        graph.addComponent(cmpLightDirection3);
+        graph.addComponent(cmpLightDirection4);
+
+        graph.addChild(snake);
+        graph.addChild(food);
+        graph.addChild(cube);
 
 
-        return node;
+        return graph;
     }
 }

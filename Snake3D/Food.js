@@ -56,7 +56,7 @@ var Snake3D;
         }
         createComponents() {
             let mesh = new ƒ.MeshCube();
-            let mtrSolidRed = new ƒ.Material("SolidRed", ƒ.ShaderUniColor, new ƒ.CoatColored(ƒ.Color.CSS("RED")));
+            let mtrSolidRed = new ƒ.Material("SolidRed", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS("RED", 1)));
             let cmpMesh = new ƒ.ComponentMesh(mesh);
             cmpMesh.pivot.scale(ƒ.Vector3.ONE(0.8));
             this.addComponent(cmpMesh);

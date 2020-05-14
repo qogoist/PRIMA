@@ -24,7 +24,7 @@ namespace Snake3D {
 
         private createComponents(): void {
             let mesh: ƒ.MeshCube = new ƒ.MeshCube();
-            let mtrSolidWhite: ƒ.Material = new ƒ.Material("SolidWhite", ƒ.ShaderUniColor, new ƒ.CoatColored(ƒ.Color.CSS("WHITE")));
+            let mtrSolidWhite: ƒ.Material = new ƒ.Material("SolidWhite", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS("WHITE", 1)));
 
             let cmpMesh: ƒ.ComponentMesh = new ƒ.ComponentMesh(mesh);
             cmpMesh.pivot.scale(ƒ.Vector3.ONE(0.8));

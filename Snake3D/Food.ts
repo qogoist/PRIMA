@@ -72,7 +72,7 @@ namespace Snake3D {
 
         private createComponents(): void {
             let mesh: ƒ.MeshCube = new ƒ.MeshCube();
-            let mtrSolidRed: ƒ.Material = new ƒ.Material("SolidRed", ƒ.ShaderUniColor, new ƒ.CoatColored(ƒ.Color.CSS("RED")));
+            let mtrSolidRed: ƒ.Material = new ƒ.Material("SolidRed", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS("RED", 1)));
 
             let cmpMesh: ƒ.ComponentMesh = new ƒ.ComponentMesh(mesh);
             cmpMesh.pivot.scale(ƒ.Vector3.ONE(0.8));
