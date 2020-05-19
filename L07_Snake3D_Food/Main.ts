@@ -1,12 +1,19 @@
-namespace L06_Snake3D_HeadControl {
+namespace L07_Snake3D_Food {
   import ƒ = FudgeCore;
   import ƒAid = FudgeAid;
-
+  ƒ.RenderManager.initialize(true, true);
   window.addEventListener("load", hndLoad);
+
+
+  export let size: number = 7;
   export let viewport: ƒ.Viewport;
+  export let mtrStandard: ƒ.Material = new ƒ.Material("Cube", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS("white")));
+
   let snake: Snake;
+  let items: ƒ.Node;
   let cosys: ƒAid.NodeCoordinateSystem = new ƒAid.NodeCoordinateSystem("ControlSystem");
-  ƒ.RenderManager.initialize(true);
+
+
 
   function hndLoad(_event: Event): void {
     const canvas: HTMLCanvasElement = document.querySelector("canvas");
@@ -15,19 +22,26 @@ namespace L06_Snake3D_HeadControl {
     let graph: ƒ.Node = new ƒ.Node("Game");
     snake = new Snake();
     graph.addChild(snake);
-    cosys.addComponent(new ƒ.ComponentTransform(ƒ.Matrix4x4.SCALING(ƒ.Vector3.ONE(10))));
-    // graph.addChild(cosys);
+
+    items = new ƒ.Node("Items");
+    graph.addChild(items);
+    for (let i: number = 0; i < 20; i++)
+      placeFood();
 
     let cube: ƒAid.Node = new ƒAid.Node(
-      "Cube", ƒ.Matrix4x4.SCALING(ƒ.Vector3.ONE(9)),
-      new ƒ.Material("Cube", ƒ.ShaderUniColor, new ƒ.CoatColored(ƒ.Color.CSS("aqua"))),
+      "Cube", ƒ.Matrix4x4.SCALING(ƒ.Vector3.ONE(2 * size - 1)),
+      mtrStandard,
       new ƒ.MeshCube()
     );
+    cube.getComponent(ƒ.ComponentMaterial).clrPrimary = new ƒ.Color(0.4, 0.6, 0.3, 0.3);
     graph.addChild(cube);
+
+    ƒAid.addStandardLightComponents(graph, new ƒ.Color(0.5, 0.5, 0.5));
 
     let cmpCamera: ƒ.ComponentCamera = new ƒ.ComponentCamera();
     cmpCamera.pivot.translate(new ƒ.Vector3(5, 10, 40));
     cmpCamera.pivot.lookAt(ƒ.Vector3.ZERO());
+    cmpCamera.backgroundColor = ƒ.Color.CSS("white");
     // cmpCamera.pivot.rotateY(180);
 
     viewport = new ƒ.Viewport();
@@ -47,26 +61,18 @@ namespace L06_Snake3D_HeadControl {
   }
 
   function moveCamera(): void {
-    let posCamera: ƒ.Vector3 = snake.head.mtxLocal.translation;
+    let mtxHead: ƒ.Matrix4x4 = snake.head.mtxLocal;
+    let posCamera: ƒ.Vector3 = mtxHead.translation;
     posCamera.normalize(30);
     viewport.camera.pivot.translation = posCamera;
+    let up: ƒ.Vector3 = ƒ.Vector3.X();
+    up.transform(mtxHead, false);
     viewport.camera.pivot.lookAt(ƒ.Vector3.ZERO());
+    // viewport.camera.pivot.lookAt(ƒ.Vector3.ZERO(), up);
   }
 
 
   function control(_event: KeyboardEvent): void {
-    // let direction: ƒ.Vector3;
-    // direction = ƒ.Keyboard.mapToValue(ƒ.Vector3.Y(), ƒ.Vector3.ZERO(), [ƒ.KEYBOARD_CODE.W]);
-    // direction.add(ƒ.Keyboard.mapToValue(ƒ.Vector3.Y(-1), ƒ.Vector3.ZERO(), [ƒ.KEYBOARD_CODE.S]));
-
-    // if (direction.y == 0) {
-    //   direction = ƒ.Keyboard.mapToValue(ƒ.Vector3.X(), ƒ.Vector3.ZERO(), [ƒ.KEYBOARD_CODE.D]);
-    //   direction.add(ƒ.Keyboard.mapToValue(ƒ.Vector3.X(-1), ƒ.Vector3.ZERO(), [ƒ.KEYBOARD_CODE.A]));
-    // }
-
-    // if (!direction.equals(ƒ.Vector3.ZERO()))
-    //   snake.direction = direction;
-
     let rotation: ƒ.Vector3 = ƒ.Vector3.ZERO();
 
     switch (_event.code) {
@@ -84,6 +90,17 @@ namespace L06_Snake3D_HeadControl {
     }
 
     snake.rotate(rotation);
-    // cosys.mtxLocal.rotate(rotation);
+  }
+
+  function placeFood(): void {
+    let position: ƒ.Vector3 = new ƒ.Vector3(
+      ƒ.Random.default.getRangeFloored(-size, size),
+      ƒ.Random.default.getRangeFloored(-size, size),
+      ƒ.Random.default.getSign() * size
+    );
+    position.shuffle();
+    let food: ƒAid.Node = new ƒAid.Node("Food", ƒ.Matrix4x4.TRANSLATION(position), mtrStandard, new ƒ.MeshCube());
+    food.getComponent(ƒ.ComponentMaterial).clrPrimary = ƒ.Color.CSS("red");
+    items.addChild(food);
   }
 }

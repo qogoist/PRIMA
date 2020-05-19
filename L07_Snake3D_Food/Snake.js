@@ -1,6 +1,6 @@
 "use strict";
-var L06_Snake3D_HeadControl;
-(function (L06_Snake3D_HeadControl) {
+var L07_Snake3D_Food;
+(function (L07_Snake3D_Food) {
     var ƒ = FudgeCore;
     var ƒAid = FudgeAid;
     class Snake extends ƒ.Node {
@@ -18,7 +18,9 @@ var L06_Snake3D_HeadControl;
             while (true) {
                 mtxHead = cmpPrev.local.copy;
                 mtxHead.translate(this.dirCurrent);
-                if (Math.abs(mtxHead.translation.x) < 6 && Math.abs(mtxHead.translation.y) < 6 && Math.abs(mtxHead.translation.z) < 6)
+                let cubeCorner = ƒ.Vector3.ONE(L07_Snake3D_Food.size);
+                if (mtxHead.translation.isInside(cubeCorner, ƒ.Vector3.SCALE(cubeCorner, -1)))
+                    // if (Math.abs(mtxHead.translation.x) < 6 && Math.abs(mtxHead.translation.y) < 6 && Math.abs(mtxHead.translation.z) < 6)
                     break;
                 this.rotate(ƒ.Vector3.Z(-90));
             }
@@ -41,13 +43,14 @@ var L06_Snake3D_HeadControl;
         }
         createSegement(_segments) {
             let mesh = new ƒ.MeshCube();
-            let mtrSolidWhite = new ƒ.Material("SolidWhite", ƒ.ShaderUniColor, new ƒ.CoatColored(ƒ.Color.CSS("WHITE")));
+            // let mtrSolidWhite: ƒ.Material = new ƒ.Material("White", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS("WHITE")));
             for (let i = 0; i < _segments; i++) {
                 let segment = new ƒ.Node("Segment");
                 let cmpMesh = new ƒ.ComponentMesh(mesh);
                 segment.addComponent(cmpMesh);
                 cmpMesh.pivot.scale(ƒ.Vector3.ONE(0.8));
-                let cmpMaterial = new ƒ.ComponentMaterial(mtrSolidWhite);
+                // let cmpMaterial: ƒ.ComponentMaterial = new ƒ.ComponentMaterial(mtrSolidWhite);
+                let cmpMaterial = new ƒ.ComponentMaterial(L07_Snake3D_Food.mtrStandard);
                 segment.addComponent(cmpMaterial);
                 cmpMaterial.clrPrimary = ƒ.Color.CSS("yellow");
                 segment.addComponent(new ƒ.ComponentTransform(ƒ.Matrix4x4.TRANSLATION(new ƒ.Vector3(-1 * i, 0, 0))));
@@ -55,10 +58,10 @@ var L06_Snake3D_HeadControl;
             }
             this.head = this.getChildren()[0];
             let cosys = new ƒAid.NodeCoordinateSystem("ControlSystem");
-            cosys.addComponent(new ƒ.ComponentTransform(ƒ.Matrix4x4.SCALING(ƒ.Vector3.ONE(5))));
+            cosys.addComponent(new ƒ.ComponentTransform(ƒ.Matrix4x4.SCALING(ƒ.Vector3.ONE(2))));
             this.head.addChild(cosys);
         }
     }
-    L06_Snake3D_HeadControl.Snake = Snake;
-})(L06_Snake3D_HeadControl || (L06_Snake3D_HeadControl = {}));
+    L07_Snake3D_Food.Snake = Snake;
+})(L07_Snake3D_Food || (L07_Snake3D_Food = {}));
 //# sourceMappingURL=Snake.js.map

@@ -1,4 +1,4 @@
-namespace L06_Snake3D_HeadControl {
+namespace L07_Snake3D_Food {
   import ƒ = FudgeCore;
   import ƒAid = FudgeAid;
 
@@ -16,12 +16,14 @@ namespace L06_Snake3D_HeadControl {
     public move(): void {
       this.dirCurrent = this.dirNew || this.dirCurrent;
       let child: ƒ.Node = this.head;
-      let cmpPrev: ƒ.ComponentTransform = child.getComponent(ƒ.ComponentTransform); 
+      let cmpPrev: ƒ.ComponentTransform = child.getComponent(ƒ.ComponentTransform);
       let mtxHead: ƒ.Matrix4x4;
       while (true) {
         mtxHead = cmpPrev.local.copy;
         mtxHead.translate(this.dirCurrent);
-        if (Math.abs(mtxHead.translation.x) < 6 && Math.abs(mtxHead.translation.y) < 6 && Math.abs(mtxHead.translation.z) < 6)
+        let cubeCorner: ƒ.Vector3 = ƒ.Vector3.ONE(size);
+        if (mtxHead.translation.isInside(cubeCorner, ƒ.Vector3.SCALE(cubeCorner, -1)))
+          // if (Math.abs(mtxHead.translation.x) < 6 && Math.abs(mtxHead.translation.y) < 6 && Math.abs(mtxHead.translation.z) < 6)
           break;
         this.rotate(ƒ.Vector3.Z(-90));
       }
@@ -49,7 +51,7 @@ namespace L06_Snake3D_HeadControl {
 
     private createSegement(_segments: number): void {
       let mesh: ƒ.MeshCube = new ƒ.MeshCube();
-      let mtrSolidWhite: ƒ.Material = new ƒ.Material("SolidWhite", ƒ.ShaderUniColor, new ƒ.CoatColored(ƒ.Color.CSS("WHITE")));
+      // let mtrSolidWhite: ƒ.Material = new ƒ.Material("White", ƒ.ShaderFlat, new ƒ.CoatColored(ƒ.Color.CSS("WHITE")));
 
       for (let i: number = 0; i < _segments; i++) {
         let segment: ƒ.Node = new ƒ.Node("Segment");
@@ -58,7 +60,8 @@ namespace L06_Snake3D_HeadControl {
         segment.addComponent(cmpMesh);
         cmpMesh.pivot.scale(ƒ.Vector3.ONE(0.8));
 
-        let cmpMaterial: ƒ.ComponentMaterial = new ƒ.ComponentMaterial(mtrSolidWhite);
+        // let cmpMaterial: ƒ.ComponentMaterial = new ƒ.ComponentMaterial(mtrSolidWhite);
+        let cmpMaterial: ƒ.ComponentMaterial = new ƒ.ComponentMaterial(mtrStandard);
         segment.addComponent(cmpMaterial);
         cmpMaterial.clrPrimary = ƒ.Color.CSS("yellow");
 
@@ -69,7 +72,7 @@ namespace L06_Snake3D_HeadControl {
 
       this.head = this.getChildren()[0];
       let cosys: ƒAid.NodeCoordinateSystem = new ƒAid.NodeCoordinateSystem("ControlSystem");
-      cosys.addComponent(new ƒ.ComponentTransform(ƒ.Matrix4x4.SCALING(ƒ.Vector3.ONE(5))));
+      cosys.addComponent(new ƒ.ComponentTransform(ƒ.Matrix4x4.SCALING(ƒ.Vector3.ONE(2))));
       this.head.addChild(cosys);
     }
   }
