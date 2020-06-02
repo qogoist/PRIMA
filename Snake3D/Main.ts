@@ -39,18 +39,15 @@ namespace Snake3D {
 
     function update(_event: Event): void {
         snake.move();
+        moveCamera();
+        checkCollision();
+        viewport.draw();
+    }
 
+    function moveCamera(): void {
         let posCam: ƒ.Vector3 = ƒ.Vector3.NORMALIZATION(snake.head.mtxLocal.translation, 50);
         viewport.camera.pivot.translation = posCam;
-        let upVec: ƒ.Vector3 = ƒ.Vector3.TRANSFORMATION(ƒ.Vector3.X(), snake.head.mtxWorld, false);
-        upVec.normalize();
-        viewport.camera.pivot.lookAt(ƒ.Vector3.ZERO(), upVec);
-
-        ƒ.Debug.log(upVec.toString());
-
-        checkCollision();
-
-        viewport.draw();
+        viewport.camera.pivot.lookAt(ƒ.Vector3.ZERO());
     }
 
     function checkCollision(): void {
@@ -75,7 +72,7 @@ namespace Snake3D {
         }
 
         for (let i: number = 1; i < snake.getChildren().length; i++) {
-            if (snake.head.collidesWith(<CollisionSphere>snake.getChildren()[i])) {
+            if (snake.head.collidesWith(<CollisionSphere>snake.getChild(i))) {
                 ƒ.Loop.stop();
                 window.alert("Game Over.");
             }

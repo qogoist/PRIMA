@@ -27,14 +27,14 @@ var Snake3D;
     }
     function update(_event) {
         snake.move();
-        let posCam = ƒ.Vector3.NORMALIZATION(snake.head.mtxLocal.translation, 50);
-        Snake3D.viewport.camera.pivot.translation = posCam;
-        let upVec = ƒ.Vector3.TRANSFORMATION(ƒ.Vector3.X(), snake.head.mtxWorld, false);
-        upVec.normalize();
-        Snake3D.viewport.camera.pivot.lookAt(ƒ.Vector3.ZERO(), upVec);
-        ƒ.Debug.log(upVec.toString());
+        moveCamera();
         checkCollision();
         Snake3D.viewport.draw();
+    }
+    function moveCamera() {
+        let posCam = ƒ.Vector3.NORMALIZATION(snake.head.mtxLocal.translation, 50);
+        Snake3D.viewport.camera.pivot.translation = posCam;
+        Snake3D.viewport.camera.pivot.lookAt(ƒ.Vector3.ZERO());
     }
     function checkCollision() {
         if (snake.head.collidesWith(food)) {
@@ -54,7 +54,7 @@ var Snake3D;
             ƒ.Time.game.setScale(timeScale);
         }
         for (let i = 1; i < snake.getChildren().length; i++) {
-            if (snake.head.collidesWith(snake.getChildren()[i])) {
+            if (snake.head.collidesWith(snake.getChild(i))) {
                 ƒ.Loop.stop();
                 window.alert("Game Over.");
             }

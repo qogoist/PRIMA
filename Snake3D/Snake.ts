@@ -18,7 +18,6 @@ namespace Snake3D {
             this.wrap = _cubeSize / 2 + 2;
             this.createSegments(_segments);
             this.dirCurrent = ƒ.Vector3.X();
-
         }
 
         public set direction(_next: ƒ.Vector3) {
