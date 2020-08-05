@@ -64,23 +64,23 @@ declare namespace FudgeCore {
         /**
          * Info(...) displays additional information with low priority
          */
-        static info(_message: Object, ..._args: Object[]): void;
+        static info(_message: unknown, ..._args: unknown[]): void;
         /**
          * Displays information with medium priority
          */
-        static log(_message: Object, ..._args: Object[]): void;
+        static log(_message: unknown, ..._args: unknown[]): void;
         /**
          * Displays information about non-conformities in usage, which is emphasized e.g. by color
          */
-        static warn(_message: Object, ..._args: Object[]): void;
+        static warn(_message: unknown, ..._args: unknown[]): void;
         /**
          * Displays critical information about failures, which is emphasized e.g. by color
          */
-        static error(_message: Object, ..._args: Object[]): void;
+        static error(_message: unknown, ..._args: unknown[]): void;
         /**
          * Displays messages from FUDGE
          */
-        static fudge(_message: Object, ..._args: Object[]): void;
+        static fudge(_message: unknown, ..._args: unknown[]): void;
         /**
          * Clears the output and removes previous messages if possible
          */
@@ -1077,9 +1077,6 @@ declare namespace FudgeCore {
     class CoatTextured extends Coat {
         color: Color;
         texture: TextureImage;
-        tilingX: number;
-        tilingY: number;
-        repetition: boolean;
     }
 }
 declare namespace FudgeCore {
@@ -2912,6 +2909,8 @@ declare namespace FudgeCore {
         create(): void;
         serialize(): Serialization;
         deserialize(_serialization: Serialization): Serializable;
+        /**Flip the Normals of a Mesh to render opposite side of each polygon*/
+        flipNormals(): void;
         protected calculateFaceNormals(): Float32Array;
         protected abstract createVertices(): Float32Array;
         protected abstract createTextureUVs(): Float32Array;
@@ -3033,6 +3032,25 @@ declare namespace FudgeCore {
         constructor();
         protected createVertices(): Float32Array;
         protected createIndices(): Uint16Array;
+        protected createTextureUVs(): Float32Array;
+        protected createFaceNormals(): Float32Array;
+    }
+}
+declare namespace FudgeCore {
+    /**
+     * Generate a Torus with a given thickness and the number of major- and minor segments
+     * @authors Simon Storl-Schulke, HFU, 2020 | Jirka Dell'Oro-Friedl, HFU, 2020
+     */
+    class MeshTorus extends Mesh {
+        private _thickness;
+        private _majorSegments;
+        private _minorSegments;
+        static readonly iSubclass: number;
+        normals: Float32Array;
+        constructor(_thickness?: number, _majorSegments?: number, _minorSegments?: number);
+        create(): void;
+        protected createIndices(): Uint16Array;
+        protected createVertices(): Float32Array;
         protected createTextureUVs(): Float32Array;
         protected createFaceNormals(): Float32Array;
     }
